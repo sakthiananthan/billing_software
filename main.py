@@ -180,8 +180,11 @@ def bill_manager(id=None):
             bill_data=json_utils.read_json(store_admin.bill_file)
 
       if request.method=="POST":
-            prod_id=request.form["product"]
-            nos=int(request.form["nos"])
+            try:
+                  prod_id=request.form["product"]
+                  nos=int(request.form["nos"])
+            except:
+                  return redirect("/bills")
             print(nos<prod_data[prod_id]["pc_rate_cnt"])
             if request.form["cus"]!="":
                   calc_rate=float(request.form["cus"])
