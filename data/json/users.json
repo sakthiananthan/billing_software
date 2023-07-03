@@ -1,0 +1,4 @@
+{
+    "admin":[{"test":"test"},{"admin":"admin"}],
+    "users":[{"operator":"operator"}]
+}

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- SEARCH CSS  -->
+     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" /> 
+    <!-- mdbootstrap  -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.3.0/mdb.min.css" rel="stylesheet" />
+    <!-- bootstrap 5.2 css -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"> 
+    <link rel="stylesheet" href="/static/css/login.css">
+    <link rel="stylesheet" href="/static/css/ledger.css">
+  <title>Pon Lakshmi store - Product manager</title>
+</head>
+
+<body>  
+
+  <div class="container mt-5">
+    <div class="row mb-4">
+      <div class="col-8"></div>
+      <div class="col-4">
+        <div class="text-center">
+      <a href="/home" class="btn btn-primary btn-block " style="max-width: 150px"> go to home </a>
+    </div>
+    </div>
+    </div>
+    <div class="row">
+      <!-- stock adder -->
+      <div class="col-lg-3 me-4">
+        {% if err %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          {{ err }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+        {% if info %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          {{ info }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+        <div class="card" style="width: 18rem;">
+          <div class="card-body">
+            <h5 class="card-title mb-3 text-center">Add new product</h5>
+
+            <form action="/stock" autocomplete="off" method="post">
+              <div class="form-outline mb-3">
+                <select class="form-control" id="company" name="comp">
+                  {% for key, value in ledger_data.items() %}
+                  {% if key!= "summary" %}
+                  <option value="{{ key }}" name="{{ key }}">{{ key }}</option>
+                  {% endif %}
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="mb-3">
+                <input type="text" class="form-control" placeholder="Enter Product name " name="product_en" required/>
+              </div>
+              <div class="mb-3">
+                <input type="text" id="tamilid" class="form-control" placeholder="Enter Product name in tamil"
+                  name="product_ta" required/>
+              </div>
+
+              <div class="mb-3">
+                <input type="number" step="0.01" class="form-control" placeholder="Enter single piece rate"
+                  name="pc_1_rate" required/>
+              </div>
+
+              <div class="mb-3">
+                <input type="number" step="0.01" class="form-control" placeholder="Enter custom rate" name="pc_cus_rate" />
+              </div>
+
+              <div class="mb-3">
+                <input type="number" step="1" class="form-control" placeholder="Enter custom count" name="pc_cus_count" />
+              </div>
+
+              <div class="mb-3">
+                <input type="number" step="0.01" class="form-control" placeholder="Enter box rate" name="box_rate" />
+              </div>
+              <div class="mb-3">
+                <input type="number" class="form-control" placeholder="Enter box count" name="box_count" />
+              </div>
+              <div class="mb-3">
+                <input type="text" class="form-control" placeholder="Enter product tag" name="tag" />
+              </div>
+              <div class="mb-3">
+                <input type="number" name="mrp" step="0.01" class="form-control" id="exampleInputEmail1"
+                  aria-describedby="emailHelp" placeholder="Enter MRP for 1 item" required>
+              </div>
+            </div>
+              <div class="text-center">
+                <button type="submit" class="btn btn-success mb-3">add product</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      <div class="col">
+        <table class="table table-dark table-striped table-hover text-center align-middle">
+          <tr>
+            <th>sno</th>
+            <th>Product id</th>
+            <th>Product Name</th>
+            <th>Product Tamil Name</th>
+            <th>1 Pc rate</th>
+            <th>cus Pc rate</th>
+            <th>box rate</th>
+            <th>MRP</th>
+            <th>action</th>
+          </tr>
+          {% for key, value in data.items() %}
+          <form action="/prod_update/{{key}}" method="post">
+          <tr>
+            <td>{{ value["sno"] }}</td>
+            <td>{{ key }}</td>
+            <td><input type="text" value='{{ value["prod"]}}' name="prod_name" style="max-width: 120px; text-align: center; "></td>
+            <td><input type="text" value='{{ value["tamil_name"] }}' name="tamil_name" style="max-width: 120px;  text-align: center;"></td>
+            <td><input type="text" value='{{ value["pc_rate1"] }}' name="pc_rate1" style="max-width: 70px; text-align: center;"></td>
+            <td><input type="text" value='{{ value["pc_rate_cus"] }}' name="pc_rate_cus" style="max-width: 70px; text-align: center;"></td>
+            <td><input type="text" value='{{ value["box_pr"] }}' name="pc_rate_box" style="max-width: 70px; text-align: center;"></td>
+            <td><input type="text" value='{{ value["mrp"] }}' name="mrp" style="max-width: 70px; text-align: center;"></td>
+            <td>
+              <div class="d-grid gap-2 d-md-block">
+                <button type="submit" class="btn btn-outline-warning" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"> update</button>
+                <a href="/prod_delete/{{key}}" class="btn btn-outline-danger" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">delete</a>
+              </div>
+
+            </form>
+            </td>
+
+          </tr>
+          {% endfor %}
+
+
+        </table>
+      </div>
+    </div>
+  </div>
+  <!-- mdbootstrap -->
+  <!-- MDB -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.3.0/mdb.min.js">
+  </script>
+
+  <!-- bootstrap js -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js">
+
+  </script>
+
+  <!-- tamil language -->
+  <script type="text/javascript">
+    var poplo = new Array("tamilid");
+    ENABLED_TIWEB = "http://api.tamilsg.com/data/lookuptable.js";
+    var fileref = document.createElement('script');
+    fileref.src = "http://api.tamilsg.com/hplus.js";
+    document.documentElement.appendChild(fileref);
+  </script>
+
+ <!-- search select -->
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+ <script>
+   $(function () {
+     $("#company").select2();
+   });
+
+ </script>
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.3.0/mdb.min.css" rel="stylesheet" />
+
+
+  <!-- SEARCH CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <!-- mdbootstrap -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.3.0/mdb.min.css" rel="stylesheet" />
+  <!-- bootstrap 5.2 css -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/login.css">
+  <title>Pon Lakshmi store - stock manager</title>
+</head>
+
+<body>
+  <div class="container mt-5">
+    <div class="row mb-4">
+      <div class="col-8"></div>
+      <div class="col-4">
+        <div class="text-center">
+      <a href="/home" class="btn btn-primary btn-block " style="max-width: 150px"> go to home </a>
+    </div>
+    </div>
+    </div>
+    <div class="row">
+      <!-- stock adder -->
+      <div class="col-3">
+        {% if info %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          {{ info }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+        <div class="card" style="width: 18rem;">
+          <div class="card-body">
+            <h5 class="card-title mb-4 text-center">Add new stock</h5>
+
+            <form action="/stockmanager" autocomplete="off" method="post">
+
+              <!-- Multiple Item Picker -->
+
+              <div class="form-outline mb-4">
+                <select class="form-control" name="product" id="product">
+                  {% for key, value in prod_data.items() %}
+                  {% if key!= "summary" %}
+                  <option value="{{ key }}">{{ key }}</option>
+                  {% endif %}
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="mb-4">
+                <input type="number" name="cp" step="0.01" class="form-control" id="exampleInputEmail1"
+                  aria-describedby="emailHelp" placeholder="Enter purchse price 1 item">
+              </div>
+              <div class="mb-4">
+                <input type="number" name="nos" class="form-control" id="exampleInputEmail1"
+                  aria-describedby="emailHelp" placeholder="Enter number of items">
+              </div>
+              <div class="text-center">
+                <button type="submit" class="btn btn-success">add stock</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <table class="table table-dark table-striped table-hover text-center">
+          <tr>
+            <th rowspan="2">Sno</th>
+            <th rowspan="2">Product id</th>
+            <th rowspan="2">Product name</th>
+            <th rowspan="2">MRP</th>
+            <th rowspan="2">Purchace Price</th>
+            <th rowspan="2">Item Stock</th>
+            <th colspan="3">Margin</th>
+            <th colspan="3">Selling Price</th>
+            <th rowspan="2">action</th>
+          </tr>
+          <tr>
+            <th scope="col">1 pc</th>
+            <th scope="col">cus pc</th>
+            <th scope="col">box</th>
+            <th scope="col">1 pc</th>
+            <th scope="col">cus pc</th>
+            <th scope="col">box</th>
+          </tr>
+          {% for key,value in stock_data.items() %}
+          <tr>
+            <form action="/stock_update/{{key}}" method="post">
+            <td>{{ value["sno"] }}</td>
+            <td>{{ key }}</td>
+            <td>{{ value["prod"] }}</td>
+            <td>{{ value["mrp"] }}</td>
+            <td>{{ value["cp"] }}</td>
+            <td><input type="text" value='{{ value["item_stock"] }}' name="stock" style="max-width: 120px; text-align: center; "></td>
+            <td scope="col">{{ value["margin_pc"] }} </td>
+            <td scope="col">{{ value["margin_cus_pc"] }}</td>
+            <td scope="col">{{ value["margin_box"] }}</td>
+            <td scope="col">{{ value["sp_1"] }}</td>
+            <td scope="col">{{ value["sp_cus"] }}</td>
+            <td scope="col">{{ value["sp_box"] }}</td>
+            <td>
+              <button type="submit" class="btn btn-outline-warning" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"> update</button>
+            </td>
+          </tr>
+          </form>
+          {% endfor %}
+
+        </table>
+      </div>
+    </div>
+  </div>
+  </div>
+  <!-- bootstrap js -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js">
+
+  </script>
+  <!-- MDB -->
+
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.3.0/mdb.min.js">
+  </script>
+  <!-- search select -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <script>
+    $(function () {
+      $("#product").select2();
+    }); 
+  </script>
+
+</body>
+
+</html>
